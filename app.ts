@@ -19,7 +19,13 @@ function Beast(this : Ibeast, beast: Ibeast) {
 };
 /** @type {beastArray} */
 Beast.allBeasts = [];
+
 Beast.prototype.render = function () {
+
+    // create a div, store it in variable, 
+    // Evan pointed out were creating it, then finding it, then updating it,
+    //but that seems inefficiet
+
     $('main').append('<div class="clone"></div>');
     let beastClone = $('div[class="clone"]');
     let beastHtml = $('#photo-template').html();
@@ -28,11 +34,35 @@ Beast.prototype.render = function () {
     beastClone.find('img').attr('src', this.image_url);
     beastClone.find('p').text(this.description);
     beastClone.removeClass('clone');
-    beastClone.attr('class', this.title);
+    beastClone.attr('id', this.title);
+    beastClone.attr('class', 'aHornedBeast');
 
     //now to try to append text to the drop down
     $('select').append(`<option value="${this.title}">${this.title}</option>`);
+    // now to hide them... this is working on most but not all...
+    // $(`#${this.title}`).hide();
 }
+
+
+class helperFunctions {
+    static hideAll (){
+        $('.aHornedBeast').hide();
+    }
+}
+
+
+function hideAll() {
+    $('.aHornedBeast').hide();
+}
+
+$('select').on('change', () => {
+    let what = $('select:selected').valueOf(); 
+    let staticVal = $('#Cera').val();
+    console.log(staticVal);
+    let andMoreDynamic = $('option:selected').val();
+    console.log(what);
+})
+
 
 
 Beast.readJson = () => {
@@ -48,5 +78,11 @@ Beast.readJson = () => {
 Beast.loadBeasts = () => {
     Beast.allBeasts.forEach(beast => beast.render())
 }
+
+
+
+// $('#hornSelect').change(function(){
+    
+// })
 
 $(() => Beast.readJson());
