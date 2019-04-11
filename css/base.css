@@ -1,0 +1,42 @@
+
+
+header {
+text-align: center;
+background-color: blanchedalmond;
+}
+
+img {
+    height: 200px;
+    width: 200px;
+}
+
+select {
+    margin:  40px 45%;
+    background-color: purple;
+    color: white;
+    border-radius: 10px;
+}
+
+main {
+    margin: 0px auto;
+}
+
+div {
+    float: left;
+    background-color: aquamarine;
+    margin: 0px auto;
+    padding: 20px;
+}
+
+div p {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+
+}
+
+footer {
+    float: left;
+    clear: both;
+}
+

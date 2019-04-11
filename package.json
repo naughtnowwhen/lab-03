@@ -1,0 +1,26 @@
+{
+  "name": "lab-02",
+  "version": "1.0.0",
+  "description": "working WIth Jeremy",
+  "main": "app.js",
+  "dependencies": {
+    "@types/jquery": "^3.3.29",
+    "jquery": "^3.4.0",
+    "typescript": "^3.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naughtnowwhen/lab-02.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naughtnowwhen/lab-02/issues"
+  },
+  "homepage": "https://github.com/naughtnowwhen/lab-02#readme"
+}
