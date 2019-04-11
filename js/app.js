@@ -1,4 +1,3 @@
-//NOTE! I changed the index.html from pointing to js/app.js to just app.js for the sake of typescript so beware!
 function Beast(beast) {
     this.image_url = beast.image_url;
     this.title = beast.title;
