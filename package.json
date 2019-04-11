@@ -2,7 +2,7 @@
   "name": "lab-02",
   "version": "1.0.0",
   "description": "working WIth Jeremy",
-  "main": "index.js",
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,9 +16,4 @@
   "bugs": {
     "url": "https://github.com/naughtnowwhen/lab-02/issues"
   },
-  "homepage": "https://github.com/naughtnowwhen/lab-02#readme",
-  "dependencies": {
-    "@types/jquery": "^3.3.29",
-    "jquery": "^3.3.1"
-  }
 }

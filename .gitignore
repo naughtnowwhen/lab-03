@@ -446,7 +446,11 @@ $RECYCLE.BIN/
 
 *.lnk
 
+*.ts
 
+*.map
+
+tsconfig.json
 
 
 
