@@ -1,4 +1,7 @@
-
+body {
+    width: 960px;
+    margin: 0px auto;
+}
 
 header {
 text-align: center;
@@ -18,26 +21,26 @@ select {
 }
 
 main {
-    margin: 0px auto;
+    text-align: center;
 }
 
 div {
-    float: left;
-    background-color: aquamarine;
-    margin: 0px auto;
-    padding: 20px;
+    display: inline-block;
+    text-align: center;
 }
 
 div p {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     overflow: hidden;
-
+    /* text-align: center; */
 }
 
 footer {
-    float: left;
     clear: both;
+    text-align: center;
+    margin-top: 50px;
+
 }
 
 =======
@@ -50,3 +53,5 @@ img {
 .aHornedBeast {
     float: left;
 }
+
+
