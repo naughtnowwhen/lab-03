@@ -1,6 +1,8 @@
 # lab-02
 working WIth Jeremy
 
+https://github.com/naughtnowwhen/lab-02
+
 
 Number and name of feature: ________________________________
 
