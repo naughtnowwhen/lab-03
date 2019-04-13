@@ -91,6 +91,6 @@ $('#firstPage, #secondPage').click(function () {
 // $('#hornSelect').change(function(){
 // })
 $(function () {
-    //@ts-ignore
     Beast.readJson(jsonSource = 'data/\page-1.json');
 });
+//# sourceMappingURL=app.js.map

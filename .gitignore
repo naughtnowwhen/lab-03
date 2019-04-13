@@ -450,6 +450,8 @@ $RECYCLE.BIN/
 
 *.map
 
+*.ts
+.js.map
 tsconfig.json
 
 
