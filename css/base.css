@@ -1,57 +1,25 @@
 body {
-    width: 960px;
-    margin: 0px auto;
-}
-
-header {
-text-align: center;
-background-color: blanchedalmond;
+    font-family: 'Shadows Into Light', cursive;
+    animation-name: fadeIn;
+    animation-duration: 3s;
+    animation-timing-function: ease-out;
 }
 
 img {
     height: 200px;
     width: 200px;
+    margin-right: 100px;
 }
 
-select {
-    margin:  40px 45%;
-    background-color: purple;
-    color: white;
-    border-radius: 10px;
-}
-
-main {
-    text-align: center;
-}
-
-div {
-    display: inline-block;
-    text-align: center;
-}
-
-div p {
-    width: 200px;
-    height: 200px;
-    overflow: hidden;
-    /* text-align: center; */
-}
-
-footer {
-    clear: both;
-    text-align: center;
-    margin-top: 50px;
-
-}
-
-=======
-img {
-    width: 200px;
-    height: 200px;
-    /* float: left; */
-}
-
-.aHornedBeast {
-    float: left;
-}
-
-
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .fadeIn {
+    animation-name: fadeIn;
