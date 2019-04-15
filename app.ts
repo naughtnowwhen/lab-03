@@ -23,7 +23,9 @@ function Beast(this: Ibeast, beast: Ibeast) {
 /** @type {beastArray} */
 Beast.allBeasts = [];  //?
 Beast.allBeastsUniqueNames = new Set();
+
 Beast.appendTheGeneratedUniqueNamesToDropDown = function () {
+    $('option').remove();
     Beast.allBeastsUniqueNames.forEach((one : string)=>{
         $('select').append(`  <option value="${one}">${one}</option>`);
     })
@@ -86,6 +88,7 @@ Beast.readJson = (myJSONsource : string) => {
                 Beast.allBeasts.push((new Beast(item)));
                 // this a unique set of the keyword names
                 Beast.allBeastsUniqueNames.add(item.keyword.toLocaleLowerCase());
+                console.log('what was it');
             })
         })
         .then(Beast.loadBeasts)
@@ -95,7 +98,7 @@ Beast.readJson = (myJSONsource : string) => {
 
 Beast.loadBeasts = () => {
     Beast.allBeasts.forEach(beast => beast.render())
-    Beast.appendTheGeneratedUniqueNamesToDropDown
+    Beast.appendTheGeneratedUniqueNamesToDropDown();
 }
 
 
@@ -104,12 +107,14 @@ $('#firstPage, #secondPage').click(function(){
     console.log(this.id);
     if (this.id === 'firstPage'){
         Beast.allBeasts = [];
+        Beast.allBeastsUniqueNames.clear();
         hideAll();
         Beast.readJson(`data/\page-1.json`)
     }
     else if (this.id === 'secondPage'){
         hideAll();
         Beast.allBeasts = [];
+        Beast.allBeastsUniqueNames.clear()
         Beast.readJson(`data/\page-2.json`);
     }
 })
