@@ -1,5 +1,5 @@
-"use strict";
 //NOTE! I changed the index.html from pointing to js/app.js to just app.js for the sake of typescript so beware!
+import handlebars from 'handlebars';
 function Beast(beast) {
     this.image_url = beast.image_url;
     this.title = beast.title;
@@ -17,24 +17,34 @@ Beast.appendTheGeneratedUniqueNamesToDropDown = function () {
         $('select').append(`  <option value="${one}">${one}</option>`);
     });
 };
-Beast.prototype.render = function () {
-    // create a div, store it in variable, 
-    // Evan pointed out were creating it, then finding it, then updating it,
-    //but that seems inefficiet
-    $('main').append('<div class="clone"></div>');
-    let beastClone = $('div[class="clone"]');
-    let beastHtml = $('#photo-template').html();
-    beastClone.html(beastHtml);
-    beastClone.find('h2').text(this.title);
-    beastClone.find('img').attr('src', this.image_url);
-    beastClone.find('p').text(this.description);
-    beastClone.removeClass('clone');
-    beastClone.attr('class', this.keyword);
-    beastClone.addClass('allBeastClass');
-    //now to try to append text to the drop down
-    // now to hide them... this is working on most but not all...
-    // $(`#${this.title}`).hide();
+// Beast.prototype.render = function () {
+//     // create a div, store it in variable, 
+//     // Evan pointed out were creating it, then finding it, then updating it,
+//     //but that seems inefficiet
+//     $('main').append('<div class="clone"></div>');
+//     let beastClone = $('div[class="clone"]');
+//     let beastHtml = $('#photo-template').html();
+//     beastClone.html(beastHtml)
+//     beastClone.find('h2').text(this.title);
+//     beastClone.find('img').attr('src', this.image_url);
+//     beastClone.find('p').text(this.description);
+//     beastClone.removeClass('clone');
+//     beastClone.attr('class', this.keyword);
+//     beastClone.addClass('allBeastClass');
+//     //now to try to append text to the drop down
+//     // now to hide them... this is working on most but not all...
+//     // $(`#${this.title}`).hide();
+// }
+Beast.prototype.toHthml = function () {
+    let template = $('#beastTemplate').html();
+    //How do i get these types, or intellisense?
+    //options = {};
+    let compileTheTemplate = handlebars.compile(template);
+    let that = compileTheTemplate(this);
+    console.log(that);
+    return that;
 };
+//@ts-ignore
 class helperFunctions {
     static hideAll() {
         $('.aHornedBeast').hide();
@@ -54,6 +64,7 @@ function hideAll() {
 $('select').on('change', () => {
     let currentlySelected = $('option:selected').val();
     hideAll();
+    //@ts-ignore
     let showMe = $(`.${currentlySelected}`).show();
 });
 Beast.readJson = (myJSONsource) => {
