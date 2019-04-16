@@ -12,6 +12,10 @@ function Beast(beast) {
 ;
 /** @type {beastArray} */
 Beast.allBeasts = []; //?
+/** @type {beastArray} */
+Beast.allBeastsSortedByHorns = [];
+/** @type {beastArray} */
+Beast.allBeastsNeverSorted = [];
 Beast.allBeastsUniqueNames = new Set();
 Beast.appendTheGeneratedUniqueNamesToDropDown = function () {
     $('option').remove();
@@ -39,7 +43,6 @@ Beast.prototype.toHtml = function () {
     // let that = compileTheTemplate(this);
     // console.log(that);
     // return that;
-    console.log(compileTheTemplate(this));
     return compileTheTemplate(this);
 };
 function hideAll() {
@@ -62,6 +65,8 @@ Beast.readJson = (myJSONsource) => {
             console.clear();
             // @ts-ignore
             Beast.allBeasts.push((new Beast(item)));
+            //@ts-ignore
+            Beast.allBeastsNeverSorted.push((new Beast(item)));
             // this a unique set of the keyword names
             Beast.allBeastsUniqueNames.add(item.keyword.toLocaleLowerCase());
             console.log('what was it');
@@ -94,6 +99,61 @@ $('#firstPage, #secondPage').click(function () {
         Beast.readJson(`data/\page-2.json`);
     }
 });
+// sort just just nums
+let numSortReturnsNumberArr = (beasts) => {
+    let numsSorted = [];
+    let sorting = beasts.sort((aBeast, bBeast) => {
+        return aBeast.horns - bBeast.horns;
+    });
+    sorting.forEach((beast, index) => {
+        numsSorted[index] = beast.horns;
+    });
+    return numsSorted;
+};
+const numSortReturnsBeastArr = (unSortedBeasts) => {
+    return unSortedBeasts.sort((a, b) => {
+        return a.horns - b.horns;
+    });
+};
+const andNowRenderTheSortedBeasts = () => {
+    let unsorted = [...Beast.allBeasts];
+    let sortedBeasts = numSortReturnsBeastArr(Beast.allBeasts);
+    Beast.allBeastsSortedByHorns = sortedBeasts;
+    console.log(sortedBeasts);
+    eraseTheDomForTheSakeofDuplicates();
+    Beast.loadBeasts();
+};
+let didThatSortNums = () => {
+    let nums = [];
+    numSortReturnsBeastArr(Beast.allBeasts).forEach((beast) => {
+        nums.push(beast.horns);
+    });
+    return nums;
+};
+$('#hornSort').on('click', () => {
+    andNowRenderTheSortedBeasts();
+});
+console.log(didThatSortNums);
+// steps to render the beasts according to horn count
+let step1 = 'run a sort function that will return an Ibeast array sorted by horn nums, i dont see any reason i shouldnt then just set Beast.allBeasts to this new value, or maybe a new arr like Beast.allBeastsSortedByHorn would be more appropriate.';
+let step2 = 'on click of a sortByHorns button, remove all the beasts from the dom using eraseTheDomForTheSakeofDuplicates';
+let step3 = 'allBeasts is still active, i believe i can reuse the toHtml function already written thatll render them in order';
+let alphaSort = (beasts) => {
+    return beasts.sort((a, b) => {
+        return a.title > b.title ? 1 : 0;
+    });
+};
+// let executeFirstThenLog = (fun : INumSort, args : Ibeast[]) => {
+//     let execucute = fun([...args]);
+//     let output : number[] = [];
+//     execucute.forEach((sorted, index)=>{
+//         output[index] = sorted.horns;
+//         console.log(sorted.horns);
+//     })
+//     return output;
+// }
+let allTheBeasts = Beast.allBeasts;
+// let exececuted = executeFirstThenLog(numSortReturnsNumberArr, Beast.allBeasts);
 $(() => {
     Beast.readJson('data/\page-1.json');
 });

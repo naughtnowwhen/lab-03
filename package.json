@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/naughtnowwhen/lab-03/issues"
   },
+  "quokka" : {
+    "plugins" : ["quokka-jquery-loader"]
+  },
   "homepage": "https://github.com/naughtnowwhen/lab-03#readme",
   "dependencies": {
     "@types/handlebars": "^4.0.39",
@@ -23,6 +26,7 @@
     "@types/node": "^11.13.4",
     "handlebars": "^4.1.2",
     "jquery": "^3.4.0",
+    "quokka-jquery-loader": "0.0.3",
     "typescript": "^3.4.3"
   }
 }
