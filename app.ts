@@ -74,6 +74,11 @@ Beast.prototype.toHtml = function () {
 function hideAll() {
     $('.allBeastClass').hide();
 }
+
+function eraseTheDomForTheSakeofDuplicates () {
+    $('.allBeastClass').remove();
+}
+
 $('select').on('change', () => {
     let currentlySelected = $('option:selected').val();
     hideAll();
@@ -117,13 +122,15 @@ $('#firstPage, #secondPage').click(function(){
         console.log();
         Beast.allBeasts = [];
         Beast.allBeastsUniqueNames.clear();
-        hideAll();
+        // hideAll();
+        eraseTheDomForTheSakeofDuplicates();
         Beast.readJson(`data/\page-1.json`)
     }
     else if (this.id === 'secondPage'){
-        hideAll();
+        // hideAll();
         Beast.allBeasts = [];
         Beast.allBeastsUniqueNames.clear()
+        eraseTheDomForTheSakeofDuplicates();
         Beast.readJson(`data/\page-2.json`);
     }
 })
