@@ -1,5 +1,7 @@
-//NOTE! I changed the index.html from pointing to js/app.js to just app.js for the sake of typescript so beware!
-import handlebars from 'handlebars';
+"use strict";
+//hmm, this isn't working,  Module '"handlebars/runtime"' has no default export.
+// just use the cdn for now.
+// import handlebars from 'handlebars/runtime'
 function Beast(beast) {
     this.image_url = beast.image_url;
     this.title = beast.title;
@@ -18,9 +20,6 @@ Beast.appendTheGeneratedUniqueNamesToDropDown = function () {
     });
 };
 // Beast.prototype.render = function () {
-//     // create a div, store it in variable, 
-//     // Evan pointed out were creating it, then finding it, then updating it,
-//     //but that seems inefficiet
 //     $('main').append('<div class="clone"></div>');
 //     let beastClone = $('div[class="clone"]');
 //     let beastHtml = $('#photo-template').html();
@@ -31,33 +30,18 @@ Beast.appendTheGeneratedUniqueNamesToDropDown = function () {
 //     beastClone.removeClass('clone');
 //     beastClone.attr('class', this.keyword);
 //     beastClone.addClass('allBeastClass');
-//     //now to try to append text to the drop down
-//     // now to hide them... this is working on most but not all...
-//     // $(`#${this.title}`).hide();
 // }
-Beast.prototype.toHthml = function () {
+Beast.prototype.toHtml = function () {
     let template = $('#beastTemplate').html();
     //How do i get these types, or intellisense?
     //options = {};
-    let compileTheTemplate = handlebars.compile(template);
-    let that = compileTheTemplate(this);
-    console.log(that);
-    return that;
+    let compileTheTemplate = Handlebars.compile(template);
+    // let that = compileTheTemplate(this);
+    // console.log(that);
+    // return that;
+    console.log(compileTheTemplate(this));
+    return compileTheTemplate(this);
 };
-//@ts-ignore
-class helperFunctions {
-    static hideAll() {
-        $('.aHornedBeast').hide();
-    }
-    static compareAllBeastsLengthTheLengthOftheDropDown() {
-        // there are 20 beasts in the array
-        let options = $('option');
-        return options.length;
-    }
-    static first() {
-        return Beast.allBeasts[0];
-    }
-}
 function hideAll() {
     $('.allBeastClass').hide();
 }
@@ -83,12 +67,16 @@ Beast.readJson = (myJSONsource) => {
         .then(Beast.loadBeasts);
 };
 Beast.loadBeasts = () => {
-    Beast.allBeasts.forEach(beast => beast.render());
+    Beast.allBeasts.forEach(beast => {
+        let toHtml = beast.toHtml();
+        $('.image-container').append(toHtml);
+    });
     Beast.appendTheGeneratedUniqueNamesToDropDown();
 };
 $('#firstPage, #secondPage').click(function () {
     console.log(this.id);
     if (this.id === 'firstPage') {
+        console.log();
         Beast.allBeasts = [];
         Beast.allBeastsUniqueNames.clear();
         hideAll();
@@ -101,11 +89,7 @@ $('#firstPage, #secondPage').click(function () {
         Beast.readJson(`data/\page-2.json`);
     }
 });
-// $('#hornSelect').change(function(){
-// })
 $(() => {
-    //@ts-ignore
     Beast.readJson('data/\page-1.json');
-    console.log('anything');
 });
 //# sourceMappingURL=app.js.map
