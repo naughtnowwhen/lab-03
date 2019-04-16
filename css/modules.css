@@ -21,7 +21,7 @@ header {
   text-align: center;
 }
 
-div p {
+section p {
   width: 200px;
   height: 200px;
   overflow: hidden;
