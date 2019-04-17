@@ -168,8 +168,32 @@ const numSortReturnsBeastArr: INumSortReturnsIBeast = (unSortedBeasts: Ibeast[])
 }
 
 
+const sortByTitle = () => {
+    let sortMe : Ibeast[] = [...Beast.allBeasts];
+    return sortMe.sort((a,b)=>{
+       return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
+    })
+}
 
-const andNowRenderTheSortedBeasts = () => {
+// Beast.loadBeasts = () => {
+//     Beast.allBeasts.forEach(beast => {
+//         let toHtml = beast.toHtml();
+//         $('.image-container').append(toHtml);
+//     })
+//     Beast.appendTheGeneratedUniqueNamesToDropDown();
+// }
+
+const andNowRenderTheSortedBeastsByTitle = () => {
+    Beast.allBeasts = sortByTitle();
+    eraseTheDomForTheSakeofDuplicates();
+    Beast.loadBeasts();
+}
+
+
+
+
+
+const andNowRenderTheSortedBeastsByHorns= () => {
     let unsorted = [...Beast.allBeasts];
     let sortedBeasts = numSortReturnsBeastArr(Beast.allBeasts);
     Beast.allBeastsSortedByHorns = sortedBeasts;
@@ -188,7 +212,11 @@ let didThatSortNums = () : number[] => {
 }   
 
 $('#hornSort').on('click', ()=>{
-    andNowRenderTheSortedBeasts();
+    andNowRenderTheSortedBeastsByHorns();
+})
+
+$('#nameSort').click(()=>{
+    andNowRenderTheSortedBeastsByTitle();
 })
 
 

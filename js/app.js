@@ -115,7 +115,25 @@ const numSortReturnsBeastArr = (unSortedBeasts) => {
         return a.horns - b.horns;
     });
 };
-const andNowRenderTheSortedBeasts = () => {
+const sortByTitle = () => {
+    let sortMe = [...Beast.allBeasts];
+    return sortMe.sort((a, b) => {
+        return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
+    });
+};
+// Beast.loadBeasts = () => {
+//     Beast.allBeasts.forEach(beast => {
+//         let toHtml = beast.toHtml();
+//         $('.image-container').append(toHtml);
+//     })
+//     Beast.appendTheGeneratedUniqueNamesToDropDown();
+// }
+const andNowRenderTheSortedBeastsByTitle = () => {
+    Beast.allBeasts = sortByTitle();
+    eraseTheDomForTheSakeofDuplicates();
+    Beast.loadBeasts();
+};
+const andNowRenderTheSortedBeastsByHorns = () => {
     let unsorted = [...Beast.allBeasts];
     let sortedBeasts = numSortReturnsBeastArr(Beast.allBeasts);
     Beast.allBeastsSortedByHorns = sortedBeasts;
@@ -131,7 +149,10 @@ let didThatSortNums = () => {
     return nums;
 };
 $('#hornSort').on('click', () => {
-    andNowRenderTheSortedBeasts();
+    andNowRenderTheSortedBeastsByHorns();
+});
+$('#nameSort').click(() => {
+    andNowRenderTheSortedBeastsByTitle();
 });
 console.log(didThatSortNums);
 // steps to render the beasts according to horn count
