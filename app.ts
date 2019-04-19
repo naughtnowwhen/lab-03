@@ -1,260 +1,114 @@
+import { rejects } from "assert";
 
+// import $ from 'jquery';
+//reminder to check, check check, the compiled javascript for strings like a source...
+//the second time i had a source string to the json that wasn't valid because of transpile. 
 
-//hmm, this isn't working,  Module '"handlebars/runtime"' has no default export.
-// just use the cdn for now.
-// import handlebars from 'handlebars/runtime'
-
-//NOTE! I changed the index.html from pointing to js/app.js to just app.js for the sake of typescript so beware!
-
-
-
-interface Ibeast {
-    title: string;
+interface beastInterface {
     image_url: string;
+    title: string;
     description: string;
     keyword: string;
     horns: number;
-    allBeasts: beastArray;
-    // render: () => void;
-    toHtml: () => HTMLElement;
+    pageJson?: number;
+    toHtml(): string;
+    appendToDOM() : void;  
 }
 
-
-type beastArray = Ibeast[];
-function Beast(this: Ibeast, beast: Ibeast) {
-    this.image_url = beast.image_url;
-    this.title = beast.title;
-    this.description = beast.description;
-    this.keyword = beast.keyword;
-    this.horns = beast.horns;
-};
-/** @type {beastArray} */
-Beast.allBeasts = [];  //?
-/** @type {beastArray} */
-Beast.allBeastsSortedByHorns = [];
-/** @type {beastArray} */
-Beast.allBeastsNeverSorted = [];
-
-Beast.allBeastsUniqueNames = new Set();
-
-
-
-Beast.appendTheGeneratedUniqueNamesToDropDown = function () {
-    $('option').remove();
-    Beast.allBeastsUniqueNames.forEach((one: string) => {
-        $('select').append(`  <option value="${one}">${one}</option>`);
-    })
+class Containment {
+    public allBeasts: beastInterface[] = [];
+    public neverSorted: beastInterface[] = [];
+    public uniqueNames: string[] = [];
+    public firstPage: beastInterface[] = [];
+    public secondPage: beastInterface[] = [];
 }
 
-// Beast.prototype.render = function () {
-//     $('main').append('<div class="clone"></div>');
-//     let beastClone = $('div[class="clone"]');
-//     let beastHtml = $('#photo-template').html();
-//     beastClone.html(beastHtml)
-//     beastClone.find('h2').text(this.title);
-//     beastClone.find('img').attr('src', this.image_url);
-//     beastClone.find('p').text(this.description);
-//     beastClone.removeClass('clone');
-//     beastClone.attr('class', this.keyword);
-//     beastClone.addClass('allBeastClass');
-// }
-
-Beast.prototype.toHtml = function () {
-    let template = $('#beastTemplate').html();
+let myContainer = new Containment();
 
 
-    //How do i get these types, or intellisense?
-    //options = {};
-    let compileTheTemplate = Handlebars.compile(template);
-
-    // let that = compileTheTemplate(this);
-    // console.log(that);
-    // return that;
-    return compileTheTemplate(this);
+enum jsonSource {
+    json1 = './data/\page-1.json',
+    json2 = './data/\page-2.json'
 }
 
+class Beast implements beastInterface {
 
+    public image_url: string;
+    public title: string;
+    public description: string;
+    public keyword: string;
+    public horns: number;
+    public pageJson?: number;
 
-function hideAll() {
-    $('.allBeastClass').hide();
+    constructor(
+        public beastInput: beastInterface
+    ) {
+        this.image_url = beastInput.image_url;
+        this.title = beastInput.title;
+        this.description = beastInput.description;
+        this.keyword = beastInput.keyword;
+        this.horns = beastInput.horns;
+    }
+
+    static readJson(input: jsonSource | string = jsonSource.json1) {
+        jsonPromise(input);
+    }
+
+    toHtml() {
+        let $html = $('#beastTemplate').html();
+        let compiled = Handlebars.compile($html);
+        console.log(this);
+        return compiled(this);
+    }
+    appendToDOM() {
+        $('.image-container').append(this.toHtml())
+    }
 }
 
-function eraseTheDomForTheSakeofDuplicates() {
-    $('.allBeastClass').remove();
-}
-
-$('select').on('change', () => {
-    let currentlySelected = $('option:selected').val();
-    hideAll();
-    //@ts-ignore
-    let showMe = $(`.${currentlySelected}`).show();
-})
-
-
-Beast.readJson = (myJSONsource: string) => {
-    $.get(myJSONsource, 'json')
-        .then(data => {
-            data.forEach((item: Ibeast) => {
-                console.log(item);
-                console.clear();
-
-                // @ts-ignore
-                Beast.allBeasts.push((new Beast(item)));
-                //@ts-ignore
-                Beast.allBeastsNeverSorted.push((new Beast(item)));
-                // this a unique set of the keyword names
-                Beast.allBeastsUniqueNames.add(item.keyword.toLocaleLowerCase());
-                console.log('what was it');
-            })
+// this promise is specifically for loading the JSON, when it's resolved it'll call the next
+// promise readyToAppend
+let jsonPromise = function(whichJson : string) {
+    return new Promise((resolve, reject)=>{
+        $.get(whichJson, 'json')
+        .then((results)=>{
+           let output : beastInterface[] = [];
+            results.forEach((result : beastInterface)=>{
+            output.push(new Beast(result));
+            myContainer.allBeasts.push(new Beast(result))
+           })
+            resolve(output);
+            readyToAppend();
         })
-        .then(Beast.loadBeasts)
-
-}
-
-
-Beast.loadBeasts = () => {
-    Beast.allBeasts.forEach(beast => {
-        let toHtml = beast.toHtml();
-        $('.image-container').append(toHtml);
     })
-    Beast.appendTheGeneratedUniqueNamesToDropDown();
-}
+  }
 
+  // i broke these functions out into explicit promises, for a few reasons... to practice explicit promises,
+  // and even though more verbose, they make sense to me and seem to allow for fine grain control..
+  // this style of explicit promises came from a techsith video which is about the best example / tutorial / teaching i've experienced on promises...
+  // He's great and able to break them down to so nicely. 
+ let readyToAppend = function() {
+     return new Promise((resolve, reject)=>{
+         if (myContainer.allBeasts.length == 20){
+             console.log(myContainer.allBeasts.length);
+            resolve('hitting');
+         }
+     })
+     .then((result)=>{
+        console.log(result, 'line 94');
+        myContainer.allBeasts.forEach((beast)=> {
+            beast.appendToDOM();
+        })
+     })
+ }
 
+ 
 
-$('#firstPage, #secondPage').click(function () {
-    console.log(this.id);
-    if (this.id === 'firstPage') {
-        console.log();
-        Beast.allBeasts = [];
-        Beast.allBeastsUniqueNames.clear();
-        // hideAll();
-        eraseTheDomForTheSakeofDuplicates();
-        Beast.readJson(`data/\page-1.json`)
-    }
-    else if (this.id === 'secondPage') {
-        // hideAll();
-        Beast.allBeasts = [];
-        Beast.allBeastsUniqueNames.clear()
-        eraseTheDomForTheSakeofDuplicates();
-        Beast.readJson(`data/\page-2.json`);
-    }
-})
-
-interface INumSort {
-    (input: Ibeast[]): number[];
-}
-
-interface INumSortReturnsIBeast {
-    (input: Ibeast[]): Ibeast[];
-}
-
-// sort just just nums
-let numSortReturnsNumberArr: INumSort = (beasts: Ibeast[]) : number[]=> {
-    let numsSorted: number[] = [];
-    let sorting = beasts.sort((aBeast, bBeast) => {
-        return aBeast.horns - bBeast.horns;
-    })
-    sorting.forEach((beast, index) => {
-        numsSorted[index] = beast.horns;
-    })
-    return numsSorted;
-}
-
-const numSortReturnsBeastArr: INumSortReturnsIBeast = (unSortedBeasts: Ibeast[]): Ibeast[] => {
-    return unSortedBeasts.sort((a, b) => {
-        return a.horns - b.horns;
-    });     
-}
-
-
-const sortByTitle = () => {
-    let sortMe : Ibeast[] = [...Beast.allBeasts];
-    return sortMe.sort((a,b)=>{
-       return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1;
-    })
-}
-
-// Beast.loadBeasts = () => {
-//     Beast.allBeasts.forEach(beast => {
-//         let toHtml = beast.toHtml();
-//         $('.image-container').append(toHtml);
-//     })
-//     Beast.appendTheGeneratedUniqueNamesToDropDown();
-// }
-
-const andNowRenderTheSortedBeastsByTitle = () => {
-    Beast.allBeasts = sortByTitle();
-    eraseTheDomForTheSakeofDuplicates();
-    Beast.loadBeasts();
-}
-
-
-
-
-
-const andNowRenderTheSortedBeastsByHorns= () => {
-    let unsorted = [...Beast.allBeasts];
-    let sortedBeasts = numSortReturnsBeastArr(Beast.allBeasts);
-    Beast.allBeastsSortedByHorns = sortedBeasts;
-    console.log(sortedBeasts);
-    eraseTheDomForTheSakeofDuplicates();
-    Beast.loadBeasts();
-}
-
-
-let didThatSortNums = () : number[] => {
-    let nums : number[] = [];
-    numSortReturnsBeastArr(Beast.allBeasts).forEach((beast)=>{
-        nums.push(beast.horns);
-    })
-    return nums;
-}   
-
-$('#hornSort').on('click', ()=>{
-    andNowRenderTheSortedBeastsByHorns();
-})
-
-$('#nameSort').click(()=>{
-    andNowRenderTheSortedBeastsByTitle();
-})
-
-
-
-console.log(didThatSortNums);
-
-// steps to render the beasts according to horn count
-let step1 = 'run a sort function that will return an Ibeast array sorted by horn nums, i dont see any reason i shouldnt then just set Beast.allBeasts to this new value, or maybe a new arr like Beast.allBeastsSortedByHorn would be more appropriate.';
-let step2 = 'on click of a sortByHorns button, remove all the beasts from the dom using eraseTheDomForTheSakeofDuplicates';
-let step3 = 'allBeasts is still active, i believe i can reuse the toHtml function already written thatll render them in order';
-
-
-
-
-let alphaSort = (beasts: Ibeast[]): Ibeast[] => {
-    return beasts.sort((a, b) => {
-        return a.title > b.title ? 1 : 0;
-    })
-}
-
-// let executeFirstThenLog = (fun : INumSort, args : Ibeast[]) => {
-//     let execucute = fun([...args]);
-//     let output : number[] = [];
-//     execucute.forEach((sorted, index)=>{
-//         output[index] = sorted.horns;
-//         console.log(sorted.horns);
-//     })
-//     return output;
-// }
-
-let allTheBeasts = Beast.allBeasts;
-// let exececuted = executeFirstThenLog(numSortReturnsNumberArr, Beast.allBeasts);
-
-
-
+let aBeast;
 $(() => {
-    Beast.readJson('data/\page-1.json')
+    Beast.readJson(jsonSource.json1); //?
 });
 
+
+console.log(myContainer.allBeasts)
 
 
